@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SUBJECT="WTF Report fot `hostname`"
+SUBJECT="WTF Report for `hostname`"
 EMAIL=$1
 EMAILMESSAGE="/tmp/`hostname`.txt"
 
