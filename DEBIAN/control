@@ -1,0 +1,9 @@
+Package: whatthefuck
+Version: 1.0
+Architecture: all
+Maintainer: Johnny Funt
+Depends: smartmontools, ethtool, dstat, sysstat
+Section: admin
+Priority: optional
+Homepage: http://one2team.ru
+Description: WhatTheFuck is small bash reporting tool

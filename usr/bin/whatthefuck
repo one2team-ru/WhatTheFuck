@@ -1,0 +1,129 @@
+#!/bin/bash
+
+SUBJECT="WTF Report fot `hostname`"
+EMAIL=$1
+EMAILMESSAGE="/tmp/`hostname`.txt"
+
+echo "Имя системы"  >>$EMAILMESSAGE
+echo "====================================================="  >>$EMAILMESSAGE
+uname -a >>$EMAILMESSAGE
+
+echo "Кто на сервере"  >>$EMAILMESSAGE
+echo "====================================================="  >>$EMAILMESSAGE
+w >>$EMAILMESSAGE
+
+echo "Последние 24 входа"  >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+last -n 24 >>$EMAILMESSAGE
+
+echo "Последние 48 команд" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+history | tail -n48 >>$EMAILMESSAGE
+
+echo "Журнал ядра" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+dmesg >>$EMAILMESSAGE
+
+echo "Последние 128 сообщений Syslog" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+tail -n128 /var/log/messages >>$EMAILMESSAGE
+
+echo "Дерево процессов" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+pstree -a >>$EMAILMESSAGE
+
+echo "Список процессов" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+ps aux >>$EMAILMESSAGE
+
+echo "Свободная память" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+free -m >>$EMAILMESSAGE
+
+echo "Аптайм и загрузка" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+uptime >>$EMAILMESSAGE
+
+echo "Top" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+top -n 1 >>$EMAILMESSAGE
+
+echo "Сетевые интерфейсы" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+ifconfig >>$EMAILMESSAGE
+
+echo "Статистика по сокетам" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+ss -s >>$EMAILMESSAGE
+
+echo "Список открытых TCP портов" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+netstat -ntlp >>$EMAILMESSAGE
+
+echo "Список открытых UDP портов" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+netstat -nulp >>$EMAILMESSAGE
+
+echo "Список открытых UNIX-сокетов" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+netstat -nxlp >>$EMAILMESSAGE
+
+echo "Информация о Ethernet" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+ethtool eth0 >>$EMAILMESSAGE
+
+echo "Статистика Ethernet" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+ethtool -S eth0 >>$EMAILMESSAGE
+
+echo "Примонтированные ФС" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+mount >>$EMAILMESSAGE
+
+echo "ФС в fstab" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+cat /etc/fstab >>$EMAILMESSAGE
+
+echo "Свободное место на дисках" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+df -h >>$EMAILMESSAGE
+
+echo "Нагрузка на IO" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+iostat -kx 2 -N 1 >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+dstat --top-io --top-bio 1 1 >>$EMAILMESSAGE
+
+echo "PCI устройства" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+lspci >>$EMAILMESSAGE
+
+echo "DMI" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+dmidecode >>$EMAILMESSAGE
+
+echo "Настройки ядра" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+sysctl -a >>$EMAILMESSAGE
+
+echo "Прерывания" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+cat /proc/interrupts >>$EMAILMESSAGE
+
+echo "Crontab" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+for user in $(cat /etc/passwd | cut -f1 -d:  >>$EMAILMESSAGE); do crontab -l -u $user; done
+
+echo "IPTables" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+iptables-save >>$EMAILMESSAGE
+
+echo "SMART SDA" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+smartctl -x /dev/sda  >>$EMAILMESSAGE
+
+echo "SMART SDB" >>$EMAILMESSAGE
+echo "=====================================================" >>$EMAILMESSAGE
+smartctl -x /dev/sdb  >>$EMAILMESSAGE
+
+mail -s "$SUBJECT" "$EMAIL" < $EMAILMESSAGE
