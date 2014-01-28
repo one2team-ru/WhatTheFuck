@@ -5,5 +5,5 @@ Maintainer: Johnny Funt
 Depends: smartmontools, ethtool, dstat, sysstat
 Section: admin
 Priority: optional
-Homepage: http://one2team.ru
+Homepage: http://trickyplan.ru
 Description: WhatTheFuck is small bash reporting tool
